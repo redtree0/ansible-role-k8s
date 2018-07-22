@@ -1,2 +1,11 @@
 ---
 # tasks file for ansible-role-k8s
+
+
+- include_tasks: docker.yml
+
+- include_tasks: kube.yml
+
+
+- include_tasks: kube.yml
+  when: k8s_mode == 'master'
