@@ -7,5 +7,11 @@
 - include_tasks: kube.yml
 
 
-- include_tasks: kube.yml
+- include_tasks: master.yml
   when: k8s_mode == 'master'
+
+- include_tasks: worker.yml
+  when: k8s_mode == 'worker'
+
+- include_tasks: teardown.yml
+  when: k8s_mode == 'teardown'
