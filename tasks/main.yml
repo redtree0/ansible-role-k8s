@@ -1,17 +1,19 @@
 ---
 # tasks file for ansible-role-k8s
 
-
 - include_tasks: docker.yml
 
 - include_tasks: kube.yml
 
+- debug:
+   var:  k8s_mode
 
-- include_tasks: master.yml
-  when: k8s_mode == 'master'
+- import_tasks: master.yml
+  when: (k8s_mode is defined and  k8s_mode == 'master')
 
-- include_tasks: worker.yml
-  when: k8s_mode == 'worker'
+- import_tasks: worker.yml
+  when: (k8s_mode is defined and  k8s_mode == 'worker')
 
-- include_tasks: teardown.yml
-  when: k8s_mode == 'teardown'
+- import_tasks: teardown.yml
+  when: (k8s_mode is defined and  k8s_mode == 'teardown')
+
