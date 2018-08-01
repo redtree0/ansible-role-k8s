@@ -19,10 +19,6 @@
     name: "{{ item }}"
     update_cache: yes
   with_items:
-    - kubelet="{{ k8s_version }}"
-    - kubeadm="{{ k8s_version }}"
-    - kubectl="{{ k8s_version }}"
-
-    #- kubelet=1.9.6-00
-    #- kubeadm=1.9.6-00
-    #- kubectl=1.9.6-00
+    - kubelet="{{ kubelet_package }}"
+    - kubeadm="{{ kubeadm_package }}"
+    - kubectl="{{ kubectl_package }}"

@@ -1,4 +1,6 @@
 ---
 # defaults file for ansible-role-k8s
 
-k8s_version: "1.10.0-00"
+kubelet_package : kubelet=1.11.0-00
+kubeadm_package : kubeadm=1.11.0-00
+kubectl_package : kubectl=1.11.0-00

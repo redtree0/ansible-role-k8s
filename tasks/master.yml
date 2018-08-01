@@ -4,12 +4,12 @@
 #    path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 #    line: 'Environment="KUBELET_CGROUP_DRIVER=--cgroup-driver=cgroupfs"'
 
-- name: Append $KUBELET_CGROUP_DRIVER to ExecStart=
-  lineinfile:
-    path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-    regexp: '^ExecStart=/usr/bin/kubelet'
-    line: 'ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $KUBELET_NETWORK_ARGS $KUBELET_DNS_ARGS $KUBELET_AUTHZ_ARGS $KUBELET_CADVISOR_ARGS $KUBELET_CERTIFICATE_ARGS $KUBELET_EXTRA_ARGS --cgroup-driver=cgroupfs'
-  notify: restart kubelet
+#- name: Append $KUBELET_CGROUP_DRIVER to ExecStart=
+#  lineinfile:
+#    path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+#    regexp: '^ExecStart=/usr/bin/kubelet'
+#    line: 'ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $KUBELET_NETWORK_ARGS $KUBELET_DNS_ARGS $KUBELET_AUTHZ_ARGS $KUBELET_CADVISOR_ARGS $KUBELET_CERTIFICATE_ARGS $KUBELET_EXTRA_ARGS --cgroup-driver=cgroupfs'
+#  notify: restart kubelet
 
 - name: System bridge iptable setup
   sysctl:
@@ -18,12 +18,11 @@
        reload: yes
 
 - name: Reset all kubeadm installed state
-  command: kubeadm reset
+  command: kubeadm reset --cri-socket unix:///var/run/dockershim.sock -v1  --force
   ignore_errors: true
 
 - name: Initialise Master node
-  command: kubeadm init --apiserver-advertise-address=192.168.99.20 --pod-network-cidr=192.168.0.0/16
-  #command: kubeadm init --apiserver-advertise-address=192.168.99.20 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=cri
+  command: kubeadm init --apiserver-advertise-address=192.168.99.20 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=cri
   register: kubeadm_output
 
 - name: Create .kube directory
@@ -49,8 +48,6 @@
 
 - name: Deploy pod network to the cluster
   become: no
-  command: kubectl apply -f https://docs.projectcalico.org/v3.1/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml
+  command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
 
-- name: Deploy pod network to the cluster
-  become: no
-  command: kubectl apply -f https://docs.projectcalico.org/v3.1/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
+
