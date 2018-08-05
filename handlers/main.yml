@@ -1,4 +1,8 @@
 ---
 # handlers file for ansible-role-k8s
 
-- include_tasks: ./kube.yml
+- name: restart kubelet
+  service:
+    name: kubelet
+    state: restarted
+    daemon_reload: yes

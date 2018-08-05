@@ -61,14 +61,25 @@
 - name: Add KUBELET_EXTRA_ARGS environment variable
   lineinfile:
     path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+    regexp: '^Environment="KUBELET_EXTRA_ARGS=--node-ip='
     line: 'Environment="KUBELET_EXTRA_ARGS=--node-ip={{ ansible_enp0s8.ipv4.address }}"'
 
-- name: Append $KUBELET_ARGS to ExecStart=
+- name: Delete Environment
   lineinfile:
     path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-    regexp: '^ExecStart=/usr/bin/kubelet'
-    line: ''
-    insertafter: EOF
+    state: absent
+    regexp: '^EnvironmentFile=-'
+
+- name: Delete Default ExecStart=
+  lineinfile:
+    path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+    state: absent
+    regexp: '^ExecStart='
+
+- name: Append Default ExecStart=
+  lineinfile:
+    path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+    line: 'ExecStart='
 
 - name: Append $KUBELET_ARGS to ExecStart=
   lineinfile:
