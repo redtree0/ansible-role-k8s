@@ -1,21 +1,4 @@
 ---
-- name: Add KUBELET_EXTRA_ARGS environment variable
-  lineinfile:
-    path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-    line: 'Environment="KUBELET_EXTRA_ARGS=--node-ip={{ ansible_enp0s8.ipv4.address }}"'
-
-#- name: Add KUBELET_CGROUP_DRIVER environment variable
-#  lineinfile:
-#    path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-#    line: 'Environment="KUBELET_CGROUP_DRIVER=--cgroup-driver=cgroupfs"'
-
-- name: Append $KUBELET_CGROUP_DRIVER to ExecStart=
-  lineinfile:
-    path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-    regexp: '^ExecStart=/usr/bin/kubelet'
-    line: 'ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $KUBELET_NETWORK_ARGS $KUBELET_DNS_ARGS $KUBELET_AUTHZ_ARGS $KUBELET_CADVISOR_ARGS $KUBELET_CERTIFICATE_ARGS $KUBELET_EXTRA_ARGS'
-  notify: restart kubelet
-
 - name:  Reset all kubeadm installed state
   command: kubeadm reset --force
   ignore_errors: true
