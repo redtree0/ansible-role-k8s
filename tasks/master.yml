@@ -2,14 +2,24 @@
 - name: Add KUBELET_EXTRA_ARGS environment variable
   lineinfile:
     path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-    line: 'Environment="KUBELET_EXTRA_ARGS=--node-ip={{ ansible_enp0s3.ipv4.address }}"'
+    line: 'Environment="KUBELET_EXTRA_ARGS=--node-ip={{ ansible_enp0s8.ipv4.address }}"'
+
+- name: Add KUBELET_CERTIFICATE_ARGS environment variable
+  lineinfile:
+    path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+    line: 'Environment="KUBELET_SYSTEM_PODS_ARGS=--pod-manifest-path=/etc/kubernetes/manifests --allow-privileged=true"'
+
+- name: Add KUBELET_CERTIFICATE_ARGS environment variable
+  lineinfile:
+    path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+    line: 'Environment="KUBELET_CERTIFICATE_ARGS=--rotate-certificates=true --cert-dir=/var/lib/kubelet/pki"'
 
 #- name: Add KUBELET_CGROUP_DRIVER environment variable
 #  lineinfile:
 #    path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 #    line: 'Environment="KUBELET_CGROUP_DRIVER=--cgroup-driver=cgroupfs"'
 
-- name: Append $KUBELET_CGROUP_DRIVER to ExecStart=
+- name: Append $KUBELET_EXTRA_ARGS to ExecStart=
   lineinfile:
     path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
     regexp: '^ExecStart=/usr/bin/kubelet'
