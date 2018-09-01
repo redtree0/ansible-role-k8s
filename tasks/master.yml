@@ -34,8 +34,17 @@
     owner: vagrant
     group: vagrant
 
+- name: Download a kube-flannel.yaml 
+  get_url:
+    url: https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
+    dest: /home/vagrant/kube-flannel.yml
+
+- name: Edit a kube-flannel.yaml iface enp0s8 
+  lineinfile:
+    path: /home/vagrant/kube-flannel.yml
+    insertafter: '- --kube-subnet-mgr'
+    line: '- --iface=enp0s8'
+
 - name: Deploy pod network to the cluster
   become: no
-  command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
-
-
+  command: kubectl apply -f /home/vagrant/kube-flannel.yml
