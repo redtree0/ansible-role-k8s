@@ -43,7 +43,7 @@
   lineinfile:
     path: /home/vagrant/kube-flannel.yml
     insertafter: '- --kube-subnet-mgr'
-    line: '- --iface=enp0s8'
+    line: '        - --iface=enp0s8'
 
 - name: Deploy pod network to the cluster
   become: no
