@@ -58,6 +58,11 @@
     path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
     line: 'Environment="KUBELET_CERTIFICATE_ARGS=--rotate-certificates=true --cert-dir=/var/lib/kubelet/pki"'
 
+- name: Add KUBELET_RESOLV_ARGS environment variable
+  lineinfile:
+    path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+    line: 'Environment="KUBELET_RESOLV_ARGS=--resolv-conf=/run/systemd/resolve/resolv.conf "'
+
 - name: Add KUBELET_EXTRA_ARGS environment variable
   lineinfile:
     path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
@@ -84,6 +89,6 @@
 - name: Append $KUBELET_ARGS to ExecStart=
   lineinfile:
     path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-    line: 'ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $KUBELET_NETWORK_ARGS $KUBELET_DNS_ARGS $KUBELET_AUTHZ_ARGS $KUBELET_CADVISOR_ARGS $KUBELET_CGROUP_ARGS $KUBELET_CERTIFICATE_ARGS $KUBELET_EXTRA_ARGS'
+    line: 'ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $KUBELET_NETWORK_ARGS $KUBELET_DNS_ARGS $KUBELET_AUTHZ_ARGS $KUBELET_CADVISOR_ARGS $KUBELET_CGROUP_ARGS $KUBELET_CERTIFICATE_ARGS $KUBELET_RESOLV_ARGS $KUBELET_EXTRA_ARGS'
   notify: restart kubelet
 
