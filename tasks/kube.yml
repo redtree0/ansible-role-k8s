@@ -19,6 +19,7 @@
     name: "{{ item }}"
     update_cache: yes
   with_items:
+    - "{{ k8s_cni_package }}"
     - "{{ kubelet_package }}"
     - "{{ kubeadm_package }}"
     - "{{ kubectl_package }}"

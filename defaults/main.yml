@@ -1,6 +1,7 @@
 ---
 # defaults file for ansible-role-k8s
 
+k8s_cni_package : kubernetes_cni=0.6.0-00
 kubelet_package : kubelet=1.11.0-00
 kubeadm_package : kubeadm=1.11.0-00
 kubectl_package : kubectl=1.11.0-00
