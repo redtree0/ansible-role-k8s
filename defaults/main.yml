@@ -1,6 +1,8 @@
 ---
 # defaults file for ansible-role-k8s
 # k8s_mode
+os: "ubuntu"
+arch: "amd64"
 user: "vagrant"
 group: "vagrant"
 home: "/home/vagrant"

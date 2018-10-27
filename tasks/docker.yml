@@ -7,9 +7,9 @@
 - name: Add to docker.list
   lineinfile:
     path: /etc/apt/sources.list.d/docker.list
-    line: 'deb [arch=amd64] http://download.docker.com/linux/ubuntu xenial stable'
+    line: 'deb [arch={{ arch }}] http://download.docker.com/linux/{{ os }} $(lsb_release -cs) stable'
     create: yes
-
+# xenial
 - name: Update  apt packages
   become: true
   apt:
