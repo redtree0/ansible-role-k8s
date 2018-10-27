@@ -10,16 +10,16 @@
   ignore_errors: true
 
 - name: Initialise Master node
-  command: kubeadm init --apiserver-advertise-address=192.168.99.20 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=cri
+  command: kubeadm init --apiserver-advertise-address={{ansible_host}} --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=cri
   register: kubeadm_output
 
 - name: Create .kube directory
   become: no
   file:
-    path: /home/vagrant/.kube
+    path: "/home/{{ user }}/.kube"
     state: directory
-    owner: vagrant
-    group: vagrant
+    owner: "{{ user }}"
+    group: "{{ group }}"
   register: kube_dir
 
 - name: Set fact for kubeadm join command
@@ -37,14 +37,14 @@
 - name: Download a kube-flannel.yaml 
   get_url:
     url: https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
-    dest: /home/vagrant/kube-flannel.yml
+    dest: "{{ home }}/kube-flannel.yml"
 
 - name: Edit a kube-flannel.yaml iface enp0s8 
   lineinfile:
-    path: /home/vagrant/kube-flannel.yml
+    path: "/home/{{ user }}/kube-flannel.yml"
     insertafter: '- --kube-subnet-mgr'
-    line: '        - --iface=enp0s8'
+    line: "        - --iface={{ iface }}"
 
 - name: Deploy pod network to the cluster
   become: no
-  command: kubectl apply -f /home/vagrant/kube-flannel.yml
+  command: "kubectl apply -f /home/{{ user }}/kube-flannel.yml"
