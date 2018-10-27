@@ -4,10 +4,15 @@
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
 
+- name: check release version
+` shell: echo $(lsb_release -cs)
+  register: release
+
+
 - name: Add to docker.list
   lineinfile:
     path: /etc/apt/sources.list.d/docker.list
-    line: 'deb [arch={{ arch }}] http://download.docker.com/linux/{{ os }} $(lsb_release -cs) stable'
+    line: 'deb [arch={{ arch }}] http://download.docker.com/linux/{{ os }} {{ release }} stable'
     create: yes
 # xenial
 - name: Update  apt packages
