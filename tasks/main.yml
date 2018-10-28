@@ -1,12 +1,10 @@
 ---
 # tasks file for ansible-role-k8s
 
-- include_tasks: docker.yml
-
 - include_tasks: kube.yml
 
-- debug:
-   var:  k8s_mode
+# - debug:
+#    var:  k8s_mode
 
 - import_tasks: master.yml
   when: (k8s_mode is defined and  k8s_mode == 'master')
