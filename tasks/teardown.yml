@@ -16,5 +16,5 @@
   ignore_errors: true
 
 - name: Reset kubeadm installed state
-  command: kubeadm reset
+  command: kubeadm reset --cri-socket unix:///var/run/dockershim.sock -v1  --force
   become: yes
