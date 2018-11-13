@@ -53,7 +53,7 @@
   when: (pod_network is defined and  pod_network == 'flannel')
 
 - name: get kube version hash
-  command: echo $(kubectl version | base64 | tr -d '\n')
+  shell: echo $(kubectl version | base64 | tr -d '\n')
   register: version
 
 - name: Deploy weave pod network to the cluster
