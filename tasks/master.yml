@@ -52,9 +52,13 @@
   command: "kubectl apply -f /home/{{ user }}/kube-flannel.yml"
   when: (pod_network is defined and  pod_network == 'flannel')
 
+- name: get kube version hash
+  command: echo $(kubectl version | base64 | tr -d '\n')
+  register: version
+
 - name: Deploy weave pod network to the cluster
   become: no
-  command: kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')&env.IPALLOC_RANGE=10.244.0.0/16"
+  command: kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version={{ version.stdout }}&env.IPALLOC_RANGE=10.244.0.0/16"
   when: (pod_network is defined and  pod_network == 'weave')
 
 - name: Download Template kube-proxy arm 
