@@ -68,7 +68,7 @@
   lineinfile:
     path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
     regexp: '^Environment="KUBELET_EXTRA_ARGS=--node-ip='
-    line: 'Environment="KUBELET_EXTRA_ARGS=--node-ip={{ ansible_enp0s8.ipv4.address }}"'
+    line: 'Environment="KUBELET_EXTRA_ARGS=--node-ip={{ ansible_host }}"'
 
 - name: Delete Environment
   lineinfile:
