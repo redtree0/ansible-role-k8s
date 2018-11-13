@@ -31,20 +31,38 @@
     src: /etc/kubernetes/admin.conf
     dest: '{{ kube_dir.path }}/config'
     remote_src: yes
-    owner: vagrant
-    group: vagrant
+    owner: "{{ user }}"
+    group: "{{ user }}"
 
 - name: Download a kube-flannel.yaml 
   get_url:
     url: https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
     dest: "{{ home }}/kube-flannel.yml"
+  when: (pod_network is defined and  pod_network == 'flannel')
 
 - name: Edit a kube-flannel.yaml iface enp0s8 
   lineinfile:
     path: "/home/{{ user }}/kube-flannel.yml"
     insertafter: '- --kube-subnet-mgr'
     line: "        - --iface={{ iface }}"
+  when: (pod_network is defined and  pod_network == 'flannel')
 
-- name: Deploy pod network to the cluster
+- name: Deploy flannel pod network to the cluster
   become: no
   command: "kubectl apply -f /home/{{ user }}/kube-flannel.yml"
+  when: (pod_network is defined and  pod_network == 'flannel')
+
+- name: Deploy weave pod network to the cluster
+  command: kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')&env.IPALLOC_RANGE=10.244.0.0/16"
+  when: (pod_network is defined and  pod_network == 'weave')
+
+- name: Download Template kube-proxy arm 
+  template:
+    src: /mytemplates/foo.j2
+    dest: "{{ home }}/daemonset-arm.yml"
+  when: (pod_network is defined and  pod_network == 'weave')
+
+- name: Deploy kube proxy for arm
+  become: no
+  command: "kubectl apply -f {{ home }}/daemonset-arm.yml"
+  when: (pod_network is defined and  pod_network == 'weave')
