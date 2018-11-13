@@ -58,7 +58,7 @@
 
 - name: Download Template kube-proxy arm 
   template:
-    src: /mytemplates/foo.j2
+    src: templates/daemonset-arm.j2
     dest: "{{ home }}/daemonset-arm.yml"
   when: (pod_network is defined and  pod_network == 'weave')
 
