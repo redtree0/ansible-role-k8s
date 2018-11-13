@@ -13,3 +13,4 @@ kubeadm_package : kubeadm=1.11.0-00
 kubectl_package : kubectl=1.11.0-00
 pod_network: "flannel"
 node_arch: "amd64"
+node_list: [ "kubemaster", "worker1", "worker2" ]
